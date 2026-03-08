@@ -1,0 +1,37 @@
+# This file is for running the POC Factory API itself in a container,
+# e.g. for server deployment or CI. It is NOT needed for local development.
+# For local development, just run: ./scripts/run.sh
+
+version: "3.9"
+
+services:
+  poc-factory:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - LOG_LEVEL=INFO
+      - OUTPUT_ROOT=/app/output
+      - WORK_ROOT=/app/work
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - CLAUDE_CODE_COMMAND=${CLAUDE_CODE_COMMAND:-claude}
+      - CLAUDE_CODE_TIMEOUT_SECONDS=${CLAUDE_CODE_TIMEOUT_SECONDS:-300}
+      - ENABLE_LANGFUSE=${ENABLE_LANGFUSE:-false}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_HOST=${LANGFUSE_HOST:-https://cloud.langfuse.com}
+    volumes:
+      - poc_output:/app/output
+      - poc_work:/app/work
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  poc_output:
+  poc_work:

@@ -1,0 +1,1 @@
+# POC Factory application package
