@@ -278,6 +278,7 @@ def finalize_run(state: RunGraphState) -> RunGraphState:
                 phrase=state.phrase,
                 normalized_phrase=state.normalized_phrase,
                 selected_pocs=state.selected_pocs,
+                poc_executions=run.poc_executions,
             )
             intro_slug = state.slug or state.normalized_phrase.replace(" ", "-")
             intro_path = run_output_path / f"{intro_slug}.md"

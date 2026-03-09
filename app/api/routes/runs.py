@@ -94,7 +94,10 @@ async def get_run_status(
                     poc_goal=poc.get("poc_goal", ""),
                     build_status=poc.get("build_status", "pending"),
                     validation_status=poc.get("validation_status", "not_run"),
-                    repair_attempts=poc.get("repair_attempts", 0),
+                    repair_attempts=(
+                        ra if isinstance(ra := poc.get("repair_attempts", 0), int)
+                        else len(ra)
+                    ),
                     markdown_status=poc.get("markdown_status", "pending"),
                     folder_path=poc.get("folder_path"),
                     error_message=poc.get("error_message"),

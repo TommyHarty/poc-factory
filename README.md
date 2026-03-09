@@ -48,7 +48,7 @@ curl -X POST http://localhost:8000/runs \
   -d '{
     "phrase": "prompt injection guardrails",
     "technologies": ["fastapi", "pydantic"],
-    "target_poc_count": 8,
+    "target_poc_count": 5,
     "dry_run": false
   }'
 ```
@@ -75,7 +75,7 @@ curl -X POST http://localhost:8000/runs \
     "use_docker": true,
     "use_pytest": true,
     "prefer_mocks": true,
-    "include_mermaid": true
+    "include_mermaid": false
   }
 }
 ```

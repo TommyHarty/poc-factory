@@ -104,20 +104,40 @@ class MarkdownGenerator:
         phrase: str,
         normalized_phrase: str,
         selected_pocs: list,
+        poc_executions: list | None = None,
     ) -> str:
         """Generate the opening intro chapter for the full run."""
-        poc_list_lines = [
-            f"{i + 1}. {poc.title} — {poc.goal}"
-            for i, poc in enumerate(selected_pocs)
-        ]
-        poc_list = "\n".join(poc_list_lines)
+        # Build a status lookup by slug so we can annotate each POC
+        status_by_slug: dict[str, str] = {}
+        if poc_executions:
+            for exc in poc_executions:
+                slug = exc.poc_slug if hasattr(exc, "poc_slug") else exc.get("poc_slug", "")
+                status = exc.build_status if hasattr(exc, "build_status") else exc.get("build_status", "unknown")
+                if slug:
+                    status_by_slug[slug] = str(status)
+
+        poc_detail_blocks: list[str] = []
+        for poc in selected_pocs:
+            status = status_by_slug.get(poc.slug, "unknown")
+            packages = ", ".join(poc.required_packages) if poc.required_packages else "none specified"
+            boundaries = "\n".join(f"  - {b}" for b in poc.scope_boundaries) if poc.scope_boundaries else "  - (not specified)"
+            block = (
+                f"### {poc.index:02d}. {poc.title} (`{poc.slug}`) — status: {status}\n"
+                f"**Goal:** {poc.goal}\n"
+                f"**Why it matters:** {poc.why_it_matters}\n"
+                f"**Packages:** {packages}\n"
+                f"**Scope boundaries:**\n{boundaries}"
+            )
+            poc_detail_blocks.append(block)
+
+        poc_details = "\n\n".join(poc_detail_blocks)
 
         prompt = self.prompt_loader.render(
             "run_intro_chapter_prompt.md",
             {
                 "phrase": phrase,
                 "normalized_phrase": normalized_phrase,
-                "poc_list": poc_list,
+                "poc_details": poc_details,
             },
         )
 
@@ -126,7 +146,7 @@ class MarkdownGenerator:
         content = self.llm.complete(
             prompt,
             system="You are a technical writer creating the opening chapter of a book about agentic systems.",
-            max_tokens=2000,
+            max_tokens=4000,
         )
 
         return content
