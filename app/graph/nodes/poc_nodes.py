@@ -440,7 +440,9 @@ def generate_prose_markdown(state: PocGraphState) -> PocGraphState:
         logger.error("prose_markdown_error", error=str(e))
         content = f"# {poc.title}\n\n{poc.goal}\n\n{poc.why_it_matters}\n"
 
-    prose_path = poc_folder / f"{state.poc_slug}.md"
+    docs_dir = poc_folder / "_docs"
+    docs_dir.mkdir(exist_ok=True)
+    prose_path = docs_dir / f"{state.poc_slug}.md"
     prose_path.write_text(content, encoding="utf-8")
 
     state.artifacts.append(
@@ -488,7 +490,9 @@ def generate_code_walkthrough_markdown(state: PocGraphState) -> PocGraphState:
         logger.error("walkthrough_markdown_error", error=str(e))
         content = f"# Code Implementation: {poc.title}\n\nSee the source code for implementation details.\n"
 
-    walkthrough_path = poc_folder / f"code-implementation-{state.poc_slug}.md"
+    docs_dir = poc_folder / "_docs"
+    docs_dir.mkdir(exist_ok=True)
+    walkthrough_path = docs_dir / f"code-implementation-{state.poc_slug}.md"
     walkthrough_path.write_text(content, encoding="utf-8")
 
     state.artifacts.append(

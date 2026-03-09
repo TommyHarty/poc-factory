@@ -264,6 +264,28 @@ def finalize_run(state: RunGraphState) -> RunGraphState:
         writer.write_run_report(run, run_output_path)
         writer.write_run_summary(run, run_output_path)
 
+        # Generate the top-level intro chapter for the whole topic
+        try:
+            from app.application.services.markdown_generator import MarkdownGenerator
+            from app.application.services.prompt_loader import PromptLoader
+            from app.config import get_settings
+            from app.infrastructure.llm.adapter import create_llm_adapter
+
+            _settings = get_settings()
+            llm = create_llm_adapter(_settings)
+            generator = MarkdownGenerator(llm=llm, prompt_loader=PromptLoader())
+            intro_content = generator.generate_run_intro_chapter(
+                phrase=state.phrase,
+                normalized_phrase=state.normalized_phrase,
+                selected_pocs=state.selected_pocs,
+            )
+            intro_slug = state.slug or state.normalized_phrase.replace(" ", "-")
+            intro_path = run_output_path / f"{intro_slug}.md"
+            intro_path.write_text(intro_content, encoding="utf-8")
+            logger.info("run_intro_chapter_written", path=str(intro_path))
+        except Exception as e:
+            logger.error("run_intro_chapter_error", error=str(e))
+
         logger.info(
             "run_finalized",
             run_id=state.run_id,

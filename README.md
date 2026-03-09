@@ -5,8 +5,8 @@ An agentic POC generation platform that automatically creates a folder of focuse
 ## What it does
 
 Submit a phrase like `"prompt injection guardrails"` and get back:
-- 8-15 ranked, focused POC ideas
-- Each POC built from your private starter repo
+- 5-10 ranked, focused POC ideas
+- Each POC built from your starter repo (public or private)
 - Claude Code invoked to implement each POC
 - Validation and auto-repair for failures
 - Prose teaching chapter + code walkthrough per POC
@@ -27,8 +27,9 @@ bash scripts/setup.sh
 ```bash
 cp .env.example .env
 # Edit .env with:
-#   ANTHROPIC_API_KEY=sk-ant-...
-#   GITHUB_TOKEN=ghp_...  (for private starter repo)
+#   OPENAI_API_KEY=sk-...         (for ideation, ranking, markdown)
+#   STARTER_REPO_URL=https://...  (your FastAPI starter repo)
+#   GITHUB_TOKEN=ghp_...          (only needed for private starter repos)
 ```
 
 ### 3. Run
@@ -47,8 +48,8 @@ curl -X POST http://localhost:8000/runs \
   -d '{
     "phrase": "prompt injection guardrails",
     "technologies": ["fastapi", "pydantic"],
-    "target_poc_count": 10,
-    "dry_run": true
+    "target_poc_count": 8,
+    "dry_run": false
   }'
 ```
 
@@ -69,12 +70,7 @@ curl -X POST http://localhost:8000/runs \
   "phrase": "monitoring and observability",
   "technologies": ["langfuse", "fastapi"],
   "optional_packages": ["langgraph"],
-  "target_poc_count": 10,
-  "starter_repo": {
-    "provider": "github",
-    "repo_url": "https://github.com/your-org/fastapi-starter.git",
-    "branch": "main"
-  },
+  "target_poc_count": 8,
   "preferences": {
     "use_docker": true,
     "use_pytest": true,
@@ -89,18 +85,19 @@ curl -X POST http://localhost:8000/runs \
 ```
 output/
   prompt-injection-guardrails/
-    run-plan.json
+    prompt-injection-guardrails.md   ← intro chapter for the topic
     run-report.json
     run-summary.md
     01-untrusted-data-boundary/
       CLAUDE.md
       README.md
-      requirements.txt
+      pyproject.toml
       .env.example
-      src/
+      app/
       tests/
-      01-untrusted-data-boundary.md
-      code-implementation-01-untrusted-data-boundary.md
+      _docs/
+        01-untrusted-data-boundary.md
+        code-implementation-01-untrusted-data-boundary.md
       build-report.json
     02-minimise-model-authority/
       ...
@@ -143,8 +140,10 @@ Key environment variables (see `.env.example` for full list):
 
 | Variable | Description |
 |----------|-------------|
-| `ANTHROPIC_API_KEY` | For POC ideation, ranking, and markdown generation |
-| `GITHUB_TOKEN` | For accessing private starter repos |
+| `OPENAI_API_KEY` | For POC ideation, ranking, and markdown generation |
+| `STARTER_REPO_URL` | URL of the FastAPI starter repo to clone for each POC |
+| `STARTER_REPO_BRANCH` | Branch to use (default: `master`) |
+| `GITHUB_TOKEN` | Only required for private starter repos |
 | `CLAUDE_CODE_COMMAND` | Claude Code CLI command (default: `claude`) |
 | `CLAUDE_CODE_TIMEOUT_SECONDS` | Timeout per POC build (default: 300) |
 | `ENABLE_LANGFUSE` | Enable Langfuse tracing |

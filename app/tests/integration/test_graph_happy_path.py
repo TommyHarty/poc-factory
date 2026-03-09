@@ -157,7 +157,7 @@ class TestRunGraphHappyPath:
             result = ingest_request(state)
 
         # Should be clamped to minimum
-        assert result.target_poc_count >= 8
+        assert result.target_poc_count >= 5
 
     def test_normalize_phrase_node(self, tmp_output):
         """Test phrase normalization."""

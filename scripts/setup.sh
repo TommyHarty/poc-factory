@@ -31,6 +31,6 @@ fi
 echo "Setup complete!"
 echo ""
 echo "Next steps:"
-echo "  1. Edit .env with your API keys (ANTHROPIC_API_KEY, GITHUB_TOKEN)"
+echo "  1. Edit .env — set OPENAI_API_KEY and STARTER_REPO_URL (GITHUB_TOKEN only needed for private repos)"
 echo "  2. Run: bash scripts/run.sh"
 echo "  3. Try: curl -X POST http://localhost:8000/runs -H 'Content-Type: application/json' -d '{\"phrase\": \"prompt injection guardrails\"}'"

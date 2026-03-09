@@ -6,9 +6,9 @@ from pydantic import BaseModel, Field
 class GenerationPolicy(BaseModel):
     """Policy governing how a run is executed."""
 
-    min_poc_count: int = Field(default=8)
-    max_poc_count: int = Field(default=15)
-    default_poc_count: int = Field(default=10)
+    min_poc_count: int = Field(default=5)
+    max_poc_count: int = Field(default=10)
+    default_poc_count: int = Field(default=8)
 
     max_repair_attempts: int = Field(default=2)
     max_concurrent_pocs: int = Field(default=3)

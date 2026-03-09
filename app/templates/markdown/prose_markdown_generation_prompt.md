@@ -43,6 +43,7 @@ How this pattern fits into a real production system. What you'd connect it to. W
 - Technical but readable
 - No filler phrases like "In conclusion" or "As we can see"
 - No references to the specific generated POC repo, its files, or its code
+- Do NOT mention, reference, or link to any other POCs, approaches, or patterns by name or number. This chapter stands alone.
 - Length: 800-1400 words
 
 ## Output

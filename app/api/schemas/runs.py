@@ -33,10 +33,10 @@ class CreateRunRequest(BaseModel):
         description="Optional packages to incorporate where relevant",
     )
     target_poc_count: int = Field(
-        default=10,
-        ge=8,
-        le=15,
-        description="Number of POCs to generate (8-15)",
+        default=8,
+        ge=5,
+        le=10,
+        description="Number of POCs to generate (5-10)",
     )
     preferences: GenerationPreferencesRequest = Field(
         default_factory=GenerationPreferencesRequest

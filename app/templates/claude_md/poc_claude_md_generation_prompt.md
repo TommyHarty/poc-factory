@@ -31,7 +31,7 @@ The file must include these sections:
 8. Acceptance Criteria (specific, testable criteria)
 9. Testing Requirements
 10. Repo Hygiene Requirements
-11. Documentation Requirements
+11. Documentation Requirements — README must be self-contained. Do NOT reference other POCs, other patterns, or "related approaches" sections. Do not mention any other numbered POC.
 12. Global Implementation Rules (use the standard section below EXACTLY)
 
 ## Standard Starter Assumptions Section

@@ -61,7 +61,9 @@ Work through files in this order:
 4. API routes / endpoints (`app/main.py` additions or `app/routers/`)
 5. Tests (`tests/`)
 6. `pyproject.toml` (show the dependencies block)
-7. `README.md`
+
+Do NOT include README.md in the steps.
+Do NOT mention, reference, or link to any other POCs, approaches, or patterns by name or number. This guide stands alone.
 
 ### Verification
 

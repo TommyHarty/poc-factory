@@ -13,13 +13,14 @@ logger = get_logger(__name__)
 
 REQUIRED_FILES = [
     "README.md",
-    "requirements.txt",
     ".env.example",
 ]
 
+# The starter repo uses pyproject.toml instead of requirements.txt,
+# and app/ instead of src/ — so we check for those conventions.
 REQUIRED_DIRS = [
     "tests",
-    "src",
+    "app",
 ]
 
 

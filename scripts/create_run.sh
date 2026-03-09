@@ -13,7 +13,7 @@ RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${BASE_URL}/runs" \
     "phrase": "prompt injection guardrails",
     "technologies": ["fastapi", "pydantic"],
     "optional_packages": [],
-    "target_poc_count": 8,
+    "target_poc_count": 5,
     "preferences": {
       "use_docker": true,
       "use_pytest": true,

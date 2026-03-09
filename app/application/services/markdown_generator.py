@@ -73,6 +73,7 @@ class MarkdownGenerator:
             poc_folder,
             max_files=MAX_FILES_WALKTHROUGH,
             max_chars=MAX_FILE_CONTENT_CHARS_WALKTHROUGH,
+            exclude_readme=True,
         )
 
         prompt = self.prompt_loader.render(
@@ -94,6 +95,38 @@ class MarkdownGenerator:
             prompt,
             system="You are a senior engineer writing a step-by-step implementation guide. Be precise and include all implementation code.",
             max_tokens=6000,
+        )
+
+        return content
+
+    def generate_run_intro_chapter(
+        self,
+        phrase: str,
+        normalized_phrase: str,
+        selected_pocs: list,
+    ) -> str:
+        """Generate the opening intro chapter for the full run."""
+        poc_list_lines = [
+            f"{i + 1}. {poc.title} — {poc.goal}"
+            for i, poc in enumerate(selected_pocs)
+        ]
+        poc_list = "\n".join(poc_list_lines)
+
+        prompt = self.prompt_loader.render(
+            "run_intro_chapter_prompt.md",
+            {
+                "phrase": phrase,
+                "normalized_phrase": normalized_phrase,
+                "poc_list": poc_list,
+            },
+        )
+
+        logger.info("generating_run_intro_chapter", phrase=phrase)
+
+        content = self.llm.complete(
+            prompt,
+            system="You are a technical writer creating the opening chapter of a book about agentic systems.",
+            max_tokens=2000,
         )
 
         return content
@@ -163,6 +196,7 @@ class MarkdownGenerator:
         poc_folder: Path,
         max_files: int = MAX_FILES_WALKTHROUGH,
         max_chars: int = MAX_FILE_CONTENT_CHARS_WALKTHROUGH,
+        exclude_readme: bool = False,
     ) -> str:
         """Get content of implementation files to include in the prompt.
 
@@ -191,11 +225,14 @@ class MarkdownGenerator:
                     continue
                 collected.append(path)
 
-        # Also include README.md and pyproject.toml at root
-        for extra in ["README.md", "pyproject.toml"]:
-            p = poc_folder / extra
-            if p.exists():
-                collected.append(p)
+        # Also include pyproject.toml and optionally README.md at root
+        if not exclude_readme:
+            readme = poc_folder / "README.md"
+            if readme.exists():
+                collected.append(readme)
+        toml = poc_folder / "pyproject.toml"
+        if toml.exists():
+            collected.append(toml)
 
         files_content = []
         for path in collected[:max_files]:

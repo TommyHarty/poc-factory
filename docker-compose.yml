@@ -15,7 +15,7 @@ services:
       - OUTPUT_ROOT=/app/output
       - WORK_ROOT=/app/work
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}  # Optional — only needed for private starter repos
       - CLAUDE_CODE_COMMAND=${CLAUDE_CODE_COMMAND:-claude}
       - CLAUDE_CODE_TIMEOUT_SECONDS=${CLAUDE_CODE_TIMEOUT_SECONDS:-300}
       - ENABLE_LANGFUSE=${ENABLE_LANGFUSE:-false}
